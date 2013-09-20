@@ -2,12 +2,12 @@
 
   var express, app;
 
-  var talker = function(req) {
+  var talker = function() {
     var n = 0;
     var say = function() {
       n++;
       var now = new Date().getTime();
-      req.io.emit('talk', { message: "This is event " + n + " at " + now });
+      app.io.broadcast('talk', { message: "This is event " + n + " at " + now });
       setTimeout(say, 2000);
     };
     say();
@@ -20,20 +20,18 @@
   // serve static assets from public
   app.use(express.static('public'));
 
-  // Setup the ready route, and emit talk event.
+  // respond to ready route
   app.io.route('ready', function(req) {
-      talker(req);
-      /*
-      req.io.emit('talk', {
-message: 'io event from an io route on the server'
-});
-      */
+      req.io.emit('talk', { message: 'Welcome client!' });
       });
 
   // Send the client html.
   app.get('/', function(req, res) {
       res.sendfile(__dirname + '/client.html');
       });
+
+  // start broadcasting
+  talker();
 
   app.listen(3000);
 
