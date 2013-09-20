@@ -32,20 +32,24 @@
 
   // create the TCP server
   var net = require('net');
+  var es = require('event-stream');
   var server = net.createServer(function (socket) {
+
       socket.name = socket.remoteAddress + ":" + socket.remotePort;
       console.log("TCP Connection from " + socket.name);
 
-      socket.on('data', function (data) {
-        console.log("TCP Received data: " + JSON.stringify(data.toString()));
+      // use line-oriented events
+      var client = es.pipeline(socket, es.split());
+
+      client.on('data', function (data) {
         app.io.broadcast('talk', { message: data.toString() });
         });
 
-      socket.on('end', function () {
+      client.on('end', function () {
         console.log("TCP Disconnect from " + socket.name);
         });
 
-      socket.on('error', function(err) {
+      client.on('error', function(err) {
         console.log("TCP Error from " + socket.name + ": " + JSON.stringify(err));
         });
 
