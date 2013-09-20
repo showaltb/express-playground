@@ -23,7 +23,7 @@
         // Listen for the talk event.
         socket.on('talk', function(data) {
           console.log(data);
-          $('#messages').append('<li>' + _.escape(data.message) + '</li>');
+          $('#messages').append('<li>' + _.escape(JSON.stringify(data.message)) + '</li>');
         });
 
       })();

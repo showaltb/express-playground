@@ -30,9 +30,29 @@
       res.sendfile(__dirname + '/client.html');
       });
 
-  // start broadcasting
-  talker();
+  // create the TCP server
+  var net = require('net');
+  var server = net.createServer(function (socket) {
+      socket.name = socket.remoteAddress + ":" + socket.remotePort;
+      console.log("TCP Connection from " + socket.name);
 
+      socket.on('data', function (data) {
+        console.log("TCP Received data: " + JSON.stringify(data.toString()));
+        app.io.broadcast('talk', { message: data.toString() });
+        });
+
+      socket.on('end', function () {
+        console.log("TCP Disconnect from " + socket.name);
+        });
+
+      socket.on('error', function(err) {
+        console.log("TCP Error from " + socket.name + ": " + JSON.stringify(err));
+        });
+
+      });
+
+  // start the servers
+  server.listen(5000);
   app.listen(3000);
 
 })();
