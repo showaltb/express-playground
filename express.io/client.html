@@ -1,14 +1,31 @@
-<script src="/socket.io/socket.io.js"></script>
-<script>
-io = io.connect()
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/javascripts/jquery.js"></script>
+    <script src="/javascripts/underscore.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <h1>express.io sample</h1>
 
-// Emit ready event.
-io.emit('ready') 
+    <p>Received messages:</p>
+    <ul id="messages">
+    </ul>
 
-// Listen for the talk event.
-io.on('talk', function(data) {
-  console.log(data);
-  alert(data.message)
-})  
+    <script>
 
-</script>
+      io = io.connect();
+
+      // Emit ready event.
+      io.emit('ready');
+
+      // Listen for the talk event.
+      io.on('talk', function(data) {
+        console.log(data);
+        $('#messages').append('<li>' + _.escape(data.message) + '</li>');
+        //alert(data.message);
+      });
+
+    </script>
+
+  </body>
