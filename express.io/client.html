@@ -13,18 +13,20 @@
     </ul>
 
     <script>
+      (function() {
 
-      io = io.connect();
+        var socket = io.connect();
 
-      // Emit ready event.
-      io.emit('ready');
+        // Emit ready event.
+        socket.emit('ready');
 
-      // Listen for the talk event.
-      io.on('talk', function(data) {
-        console.log(data);
-        $('#messages').append('<li>' + _.escape(data.message) + '</li>');
-        //alert(data.message);
-      });
+        // Listen for the talk event.
+        socket.on('talk', function(data) {
+          console.log(data);
+          $('#messages').append('<li>' + _.escape(data.message) + '</li>');
+        });
+
+      })();
 
     </script>
 
