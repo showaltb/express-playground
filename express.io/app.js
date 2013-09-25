@@ -1,7 +1,9 @@
-/*jslint nomen: true, indent: 2 */
-"use strict";
-
 (function () {
+
+  var config = {
+    tcpPort: 5000,
+    httpPort: 3000
+  };
 
   var express = require('express.io'),
     net = require('net'),
@@ -48,7 +50,9 @@
   });
 
   // start the servers
-  server.listen(5000);
-  app.listen(3000);
+  server.listen(config.tcpPort);
+  console.log("TCP listening on port " + config.tcpPort);
+  app.listen(config.httpPort);
+  console.log("HTTP listening on port " + config.httpPort);
 
 }());
